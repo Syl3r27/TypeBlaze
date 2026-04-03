@@ -125,8 +125,82 @@ export function leaveRoom(socketId: string) : {room: Room | null; wasHost: boole
     }
 
     return { room, wasHost };
+};
+
+export function updatePlayerProgress(
+    socketId: string,
+    progress: number,
+    wpm: number,
+    accuracy: number
+) : Room | null {
+    const roomId = socketToRoom.get(socketId);
+    if(!roomId) return null;
+
+    const room = rooms.get(roomId);
+    if(!room || room.status !== 'racing') return null;
+
+    const player = room.players.find((p)=> p.socketId == socketId);
+    if(!player) return null;
+
+    player.progress = progress;
+    player.wpm = wpm;
+    player.accuracy = accuracy;
+
+    // Check if Player finished
+
+    if(progress >= 100 && !player.finished){
+        player.finished = true;
+        player.finishTime = Date.now() - (room.startTime || Date.now());
+        const finishedPlayers = room.players.filter((p)=> p.finished);
+        player.position = finishedPlayers.length;
+    } 
+
+    //Check if all players Finished
+
+    const allFinished = room.players.every((p)=> p.finished);
+
+    if(allFinished){
+        room.status = 'finished';
+    };
+
+    return room;
+}
+
+export function startCountDown(roomId: string) : Room | null {
+    const room = rooms.get(roomId);
+    if(!room || room.status !== 'waiting') return null;
+    room.status = 'countdown';
+    return room;
+};
+
+export function startRace(roomId: string): Room | null {
+    const room = rooms.get(roomId);
+    if(!room) return null;
+    room.status = 'racing';
+    room.startTime = Date.now();
+    return room;
 }
 
 export function getRoomByCode(code: string): Room | undefined {
   return Array.from(rooms.values()).find((r) => r.code === code.toUpperCase());
 }
+
+export function getRoomBySocketId(socketId: string) : Room | undefined {
+    const roomId = socketToRoom.get(socketId);
+    return roomId ? rooms.get(roomId): undefined;
+}
+
+export function getRoomById(roomId: string): Room | undefined {
+  return rooms.get(roomId);
+}
+
+// Cleanup stale rooms (> 30 minutes old)
+setInterval(() => {
+  const now = Date.now();
+  rooms.forEach((room, id) => {
+    if (now - room.createdAt > 30 * 60 * 1000) {
+      room.players.forEach((p) => socketToRoom.delete(p.socketId));
+      rooms.delete(id);
+    }
+  });
+}, 5 * 60 * 1000);
