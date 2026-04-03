@@ -4,7 +4,7 @@ import { Server } from 'socket.io';
 import { connectDB } from './config/db';
 import dotenv from 'dotenv';
 import authRoutes from './routes/auth'
-
+import statsRoutes from './routes/stats'
 dotenv.config();
 
 const app = express();
@@ -28,6 +28,8 @@ app.get('/health', (_req, res)=>{
 });
 
 app.use('/api/auth',authRoutes);
+app.use('/api/stats', statsRoutes);
+
 
 const PORT = parseInt(process.env.PORT || '4000', 10);
 
