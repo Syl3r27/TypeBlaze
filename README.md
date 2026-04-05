@@ -39,8 +39,8 @@ typecraft/
 ### 1. Clone & Install
 
 ```bash
-git clone https://github.com/syl3r27/typeblaze.git
-cd typeblaze
+git clone https://github.com/Syl3r27/TypeCraft.git
+cd typecraft
 
 # Install backend deps
 cd backend && npm install

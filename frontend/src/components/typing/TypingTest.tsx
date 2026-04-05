@@ -8,7 +8,6 @@ import { WordDisplay } from './WordDisplay';
 import { StatsPanel } from './StatsPanel';
 import { TimerBar } from './TimerBar';
 import { ResultsScreen } from './ResultsScreen';
-import { generateWords } from '@/lib/words';
 import type { TimerMode, TestResult } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -22,21 +21,15 @@ interface TypingTestProps {
 
 export function TypingTest({ onProgressUpdate, externalWords, hideSettings }: TypingTestProps) {
   const inputRef = useRef<HTMLInputElement>(null);
-  const { timerMode, setTimerMode } = useStore();
+  const { timerMode, setTimerMode, addResult } = useStore();
   const { saveResult } = useAuth();
   const [isFocused, setIsFocused] = useState(false);
-
-  // Stable word list — regenerated only on reset
-  const [words, setWords] = useState<string[]>(() => externalWords || generateWords(120));
-
-  // Single source of truth: result being set IS the finished signal
   const [result, setResult] = useState<TestResult | null>(null);
 
   const handleComplete = useCallback(
-    async (r: TestResult) => {
-      // Set result immediately — this triggers the results screen
+    (r: TestResult) => {
       setResult(r);
-      // Best-effort save (fire and forget)
+      addResult(r);
       saveResult({
         wpm: r.wpm,
         accuracy: r.accuracy,
@@ -44,16 +37,17 @@ export function TypingTest({ onProgressUpdate, externalWords, hideSettings }: Ty
         duration: r.duration,
         mode: r.mode,
         wordCount: r.wordCount,
-      }).catch(() => {/* guest mode — ignore */});
+      }).catch(() => {});
     },
-    [saveResult]
+    [saveResult, addResult]
   );
 
   const {
     wordStates,
     currentWordIndex,
     currentInput,
-    handleInput,
+    handleKeyDown,
+    handleChange,
     timeLeft,
     isRunning,
     isFinished,
@@ -62,12 +56,12 @@ export function TypingTest({ onProgressUpdate, externalWords, hideSettings }: Ty
     progress,
     reset,
   } = useTypingEngine({
-    words,
     timerMode,
+    externalWords,
     onComplete: handleComplete,
   });
 
-  // Notify multiplayer parent of progress
+  // Multiplayer progress reporting
   useEffect(() => {
     if (onProgressUpdate && isRunning) {
       onProgressUpdate(progress, wpm, accuracy);
@@ -81,32 +75,27 @@ export function TypingTest({ onProgressUpdate, externalWords, hideSettings }: Ty
 
   const handleRetry = useCallback(() => {
     setResult(null);
-    if (!externalWords) {
-      setWords(generateWords(120));
-    }
     reset();
     setTimeout(() => inputRef.current?.focus(), 50);
-  }, [reset, externalWords]);
+  }, [reset]);
 
   const handleModeChange = useCallback(
     (mode: TimerMode) => {
       setTimerMode(mode);
       setResult(null);
-      setWords(generateWords(120));
       reset();
       setTimeout(() => inputRef.current?.focus(), 50);
     },
     [setTimerMode, reset]
   );
 
-  // Show results screen as soon as result is set
   if (result) {
     return <ResultsScreen result={result} onRetry={handleRetry} />;
   }
 
   return (
     <div className="w-full max-w-3xl mx-auto">
-      {/* Settings bar */}
+      {/* Mode selector */}
       {!hideSettings && (
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-1 bg-surface rounded-xl p-1">
@@ -125,7 +114,6 @@ export function TypingTest({ onProgressUpdate, externalWords, hideSettings }: Ty
               </button>
             ))}
           </div>
-
           <button
             onClick={handleRetry}
             className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-text-secondary hover:text-text-primary rounded-lg hover:bg-surface transition-colors"
@@ -155,12 +143,11 @@ export function TypingTest({ onProgressUpdate, externalWords, hideSettings }: Ty
         <TimerBar timeLeft={timeLeft} totalTime={parseInt(timerMode)} isRunning={isRunning} />
       </div>
 
-      {/* Word display — click anywhere to focus the hidden input */}
+      {/* Word display */}
       <div
         className="glass-card rounded-2xl p-6 sm:p-8 cursor-text mb-4 relative"
         onClick={() => inputRef.current?.focus()}
       >
-        {/* Click-to-focus hint when blurred */}
         {!isFocused && (
           <div className="absolute inset-0 rounded-2xl bg-bg/60 backdrop-blur-[2px] flex items-center justify-center z-10">
             <span className="text-text-secondary text-sm font-mono px-4 py-2 bg-surface rounded-xl border border-white/8">
@@ -176,26 +163,26 @@ export function TypingTest({ onProgressUpdate, externalWords, hideSettings }: Ty
         />
       </div>
 
-      {/* Hidden input — all keystrokes captured here */}
+      {/* Hidden input — captures all keystrokes */}
       <input
         ref={inputRef}
         type="text"
         value={currentInput}
-        onChange={(e) => handleInput(e.target.value)}
+        onChange={(e) => handleChange(e.target.value)}
+        onKeyDown={(e) => {
+          if (e.key === 'Tab') { e.preventDefault(); handleRetry(); return; }
+          handleKeyDown(e);
+        }}
         onFocus={() => setIsFocused(true)}
         onBlur={() => setIsFocused(false)}
-        onKeyDown={(e) => {
-          if (e.key === 'Tab') {
-            e.preventDefault();
-            handleRetry();
-          }
-        }}
         className="sr-only"
         autoComplete="off"
         autoCorrect="off"
         autoCapitalize="off"
         spellCheck={false}
         data-gramm="false"
+        data-gramm_editor="false"
+        data-enable-grammarly="false"
         aria-label="Typing input"
         tabIndex={0}
       />
@@ -203,10 +190,8 @@ export function TypingTest({ onProgressUpdate, externalWords, hideSettings }: Ty
       <div className="text-center mt-4">
         <span className="text-xs text-text-tertiary font-mono">
           press{' '}
-          <kbd className="px-1.5 py-0.5 rounded bg-surface text-text-secondary border border-white/8">
-            tab
-          </kbd>{' '}
-          to restart
+          <kbd className="px-1.5 py-0.5 rounded bg-surface text-text-secondary border border-white/8">tab</kbd>
+          {' '}to restart
         </span>
       </div>
     </div>

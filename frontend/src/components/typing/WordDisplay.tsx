@@ -1,5 +1,5 @@
 'use client';
-import { useEffect, useRef, forwardRef } from 'react';
+import { useEffect, useRef } from 'react';
 import type { WordState } from '@/types';
 import { cn } from '@/lib/utils';
 
@@ -10,21 +10,18 @@ interface WordDisplayProps {
 }
 
 export function WordDisplay({ wordStates, currentWordIndex, currentInput }: WordDisplayProps) {
-  const containerRef = useRef<HTMLDivElement>(null);
+  const containerRef  = useRef<HTMLDivElement>(null);
   const activeWordRef = useRef<HTMLSpanElement>(null);
 
-  // Auto-scroll so active word stays in the first two rows
+  // Keep the active word in the first two visible rows
   useEffect(() => {
     const container = containerRef.current;
-    const activeWord = activeWordRef.current;
-    if (!container || !activeWord) return;
-
-    const relativeTop = activeWord.offsetTop;
-    // Each row ≈ font-size(24px) * line-height(1.75) ≈ 42px + 12px gap = 54px
-    const rowH = 54;
-
-    if (relativeTop > rowH * 1.5) {
-      container.scrollTo({ top: relativeTop - rowH, behavior: 'smooth' });
+    const active    = activeWordRef.current;
+    if (!container || !active) return;
+    // Each row ≈ 42px (font 24px × line-height 1.75) + 12px gap = 54px
+    const ROW = 54;
+    if (active.offsetTop > ROW * 1.5) {
+      container.scrollTop = active.offsetTop - ROW;
     }
   }, [currentWordIndex]);
 
@@ -35,103 +32,90 @@ export function WordDisplay({ wordStates, currentWordIndex, currentInput }: Word
       style={{ height: '108px' }}
     >
       <div className="flex flex-wrap gap-x-3 gap-y-3">
-        {wordStates.map((wordState, wordIndex) => {
+        {wordStates.map((ws, wordIndex) => {
           const isActive = wordIndex === currentWordIndex;
-          const isPast = wordIndex < currentWordIndex;
+          const isPast   = wordIndex < currentWordIndex;
 
           return (
-            <WordSpan
+            <Word
               key={wordIndex}
               ref={isActive ? activeWordRef : null}
-              wordState={wordState}
+              ws={ws}
               isActive={isActive}
               isPast={isPast}
-              caretIndex={isActive ? currentInput.length : -1}
+              typedLength={isActive ? currentInput.length : (ws.isCompleted ? ws.typed.length : 0)}
             />
           );
         })}
       </div>
 
-      {/* Gradient fade on bottom to hide partial third row */}
+      {/* Soft fade at the bottom to hide the third-row peek */}
       <div
         className="absolute bottom-0 left-0 right-0 h-10 pointer-events-none"
-        style={{ background: 'linear-gradient(to bottom, transparent, #0f0f0f)' }}
+        style={{ background: 'linear-gradient(transparent, #0f0f0f)' }}
       />
     </div>
   );
 }
 
-// ─── Individual word span ─────────────────────────────────────
-interface WordSpanProps {
-  wordState: WordState;
+// ── Word component ─────────────────────────────────────────────
+
+interface WordProps {
+  ws: WordState;
   isActive: boolean;
   isPast: boolean;
-  caretIndex: number; // -1 means not active
+  typedLength: number;
 }
 
-const WordSpan = forwardRef<HTMLSpanElement, WordSpanProps>(function WordSpan(
-  { wordState, isActive, isPast, caretIndex },
+import { forwardRef } from 'react';
+
+const Word = forwardRef<HTMLSpanElement, WordProps>(function Word(
+  { ws, isActive, isPast, typedLength },
   ref
 ) {
-  const letterRefs = useRef<(HTMLSpanElement | null)[]>([]);
-  const caretRef = useRef<HTMLSpanElement>(null);
-
-  // Reposition caret on every render when active
-  useEffect(() => {
-    if (!isActive || caretIndex < 0 || !caretRef.current) return;
-    const caret = caretRef.current;
-    const refs = letterRefs.current;
-    const total = wordState.letters.length;
-
-    if (caretIndex === 0) {
-      caret.style.left = '0px';
-    } else if (caretIndex <= total) {
-      const el = refs[caretIndex - 1];
-      if (el) caret.style.left = `${el.offsetLeft + el.offsetWidth}px`;
-    } else {
-      // Past the end — extrapolate from last letter
-      const last = refs[total - 1];
-      if (last) {
-        const extra = caretIndex - total;
-        caret.style.left = `${last.offsetLeft + last.offsetWidth * (1 + extra)}px`;
-      }
-    }
-  });
-
   return (
     <span
       ref={ref}
       className={cn(
-        'relative inline-flex font-mono text-2xl tracking-wide',
-        isActive &&
-          'after:absolute after:-bottom-[3px] after:left-0 after:right-0 after:h-px after:rounded-full after:bg-[#e2b714]/20'
+        'relative font-mono text-2xl',
+        isActive
+          ? 'after:absolute after:inset-x-0 after:-bottom-[2px] after:h-[2px] after:rounded-full after:bg-[#e2b714]/30'
+          : ''
       )}
-      style={{ lineHeight: '1.75' }}
+      style={{ lineHeight: '1.75', letterSpacing: '0.01em' }}
     >
-      {wordState.letters.map((letter, i) => (
+      {ws.letters.map((letter, i) => (
         <span
           key={i}
-          ref={(el) => { letterRefs.current[i] = el; }}
-          className={cn(
-            'transition-colors duration-[50ms]',
-            letter.state === 'correct' && 'text-[#d1d0c5]',
-            letter.state === 'incorrect' &&
-              'text-[#ca4754] underline decoration-[#ca4754]/60 underline-offset-[3px]',
-            letter.state === 'extra' && 'text-[#ca4754] opacity-60',
-            letter.state === 'pending' &&
-              (isPast ? 'text-[#ca4754]/40' : isActive ? 'text-[#646669]' : 'text-[#3a3a3c]')
-          )}
+          style={{
+            color:
+              letter.state === 'correct'   ? '#d1d0c5' :
+              letter.state === 'incorrect' ? '#ca4754' :
+              letter.state === 'extra'     ? '#ca4754' :
+              // pending
+              isPast ? '#ca4754' : isActive ? '#646669' : '#3a3a3c',
+            opacity: letter.state === 'extra' ? 0.6 : 1,
+            textDecoration: letter.state === 'incorrect' ? 'underline' : 'none',
+            textDecorationColor: '#ca4754',
+            textUnderlineOffset: '3px',
+          }}
         >
           {letter.char}
         </span>
       ))}
 
-      {/* Caret — only rendered on active word */}
+      {/* Caret — only on active word, positioned via ch units (works perfectly for monospace) */}
       {isActive && (
         <span
-          ref={caretRef}
-          className="absolute rounded-sm bg-[#e2b714] animate-caret-blink"
-          style={{ width: '2px', top: '10%', height: '80%', left: '0px' }}
+          className="absolute bg-[#e2b714] animate-caret-blink"
+          style={{
+            width: '2px',
+            top: '10%',
+            height: '80%',
+            borderRadius: '1px',
+            // ch units are exact for monospace: 1ch = width of '0'
+            left: `${typedLength}ch`,
+          }}
         />
       )}
     </span>

@@ -1,7 +1,7 @@
 'use client';
 import Link from 'next/link';
 import { useState } from 'react';
-import { Keyboard, User, LogOut, Trophy, Zap, Menu, X } from 'lucide-react';
+import { Keyboard, User, LogOut, Trophy, Zap, Menu, X, BarChart3 } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { AuthModal } from '@/components/ui/AuthModal';
 
@@ -43,9 +43,10 @@ export function Navbar() {
 
             {isLoggedIn ? (
               <div className="flex items-center gap-1">
-                <span className="text-sm text-text-secondary px-2 font-mono">
+                <NavLink href="/profile">
+                  <User className="w-3.5 h-3.5" />
                   {user?.username}
-                </span>
+                </NavLink>
                 <button
                   onClick={logout}
                   title="Sign out"
@@ -56,6 +57,10 @@ export function Navbar() {
               </div>
             ) : (
               <div className="flex items-center gap-1">
+                <NavLink href="/profile">
+                  <BarChart3 className="w-3.5 h-3.5" />
+                  Stats
+                </NavLink>
                 <button
                   onClick={openSignIn}
                   className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-text-secondary hover:text-text-primary hover:bg-surface rounded-lg transition-colors"
@@ -87,6 +92,7 @@ export function Navbar() {
           <div className="sm:hidden border-t border-white/5 bg-bg/95 backdrop-blur-md px-4 py-3 flex flex-col gap-1">
             <MobileNavLink href="/test" onClick={() => setMenuOpen(false)}>Test</MobileNavLink>
             <MobileNavLink href="/multiplayer" onClick={() => setMenuOpen(false)}>Multiplayer</MobileNavLink>
+            <MobileNavLink href="/profile" onClick={() => setMenuOpen(false)}>Stats</MobileNavLink>
             <div className="h-px bg-surface-active my-1" />
             {isLoggedIn ? (
               <button

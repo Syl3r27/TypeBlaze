@@ -2,7 +2,7 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'TypeCraft',
+  title: 'TypeCraft — Real-time Typing Speed',
   description: 'Test your typing speed, compete with friends in real-time multiplayer races, and track your progress over time.',
   keywords: ['typing test', 'wpm', 'typing speed', 'multiplayer typing', 'monkeytype'],
   openGraph: {
