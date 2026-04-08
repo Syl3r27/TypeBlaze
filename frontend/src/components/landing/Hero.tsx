@@ -41,16 +41,16 @@ export function Hero() {
   return (
     <section
       ref={heroRef}
-      className="relative min-h-screen flex flex-col items-center justify-center px-4 pt-14 pb-20 overflow-hidden"
+       className="relative min-h-screen flex flex-col items-center justify-center px-4 pt-24 sm:pt-28 pb-20 overflow-hidden"
     >
       {/* Background effects */}
       <div className="absolute inset-0 bg-grid opacity-40" />
       <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-accent/5 rounded-full blur-[120px] pointer-events-none" />
       <div className="absolute bottom-0 left-0 w-[400px] h-[400px] bg-blue-500/3 rounded-full blur-[100px] pointer-events-none" />
 
-      <div className="relative z-10 max-w-4xl mx-auto text-center">
+      <div className="relative z-10 w-full max-w-[1200px] mx-auto px-4 lg:px-6 text-center">
         {/* Badge */}
-        <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-mono mb-8">
+         <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-mono mt-4 mb-10">
           <span className="w-1.5 h-1.5 rounded-full bg-accent animate-pulse" />
           Real-time multiplayer typing
         </div>
@@ -65,7 +65,7 @@ export function Hero() {
         {/* Subtitle */}
         <p
           ref={subtitleRef}
-          className="text-lg sm:text-xl text-text-secondary max-w-2xl mx-auto mb-10 leading-relaxed font-light"
+          className="text-lg sm:text-xl text-text-secondary max-w-3xl mx-auto mb-10 leading-relaxed font-light"
         >
           The minimalist typing speed test with live multiplayer races, detailed analytics,
           and a distraction-free experience built for serious typists.
@@ -106,7 +106,7 @@ export function Hero() {
         {/* Demo typing preview */}
         <div
           ref={demoRef}
-          className="glass-card rounded-2xl p-6 sm:p-8 max-w-2xl mx-auto"
+           className="glass-card rounded-2xl p-6 sm:p-8 max-w-3xl mx-auto"
         >
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-4">
@@ -121,7 +121,7 @@ export function Hero() {
       </div>
 
       {/* Features row */}
-      <div className="relative z-10 max-w-4xl mx-auto w-full px-4 mt-20">
+       <div className="relative z-10max-w-[1200px] mx-auto w-full px-4 lg:px-6 mt-20">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
             {
@@ -140,8 +140,8 @@ export function Hero() {
               desc: 'WPM over time, accuracy heatmaps, and complete test history with trends.',
             },
           ].map((f) => (
-            <div key={f.title} className="glass-card rounded-xl p-5 text-left">
-              <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center mb-3">
+            <div key={f.title} className="glass-card rounded-xl p-5 text-left transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-accent/10 hover:border-accent/30 border border-transparent">
+              <div className="w-9 h-9 rounded-lg bg-accent/10 flex items-center justify-center mb-3 transition-all duration-300 group-hover:bg-accent/20 group-hover:scale-110">
                 {f.icon}
               </div>
               <h3 className="font-semibold text-text-primary text-sm mb-1">{f.title}</h3>
