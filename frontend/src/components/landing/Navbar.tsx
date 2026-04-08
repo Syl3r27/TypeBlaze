@@ -17,14 +17,14 @@ export function Navbar() {
   return (
     <>
       <nav className="fixed top-0 left-0 right-0 z-50 border-b border-white/5 bg-bg/80 backdrop-blur-md">
-        <div className="w-full max-w-[1400px] mx-auto px-3 sm:px-4 h-16 flex items-center justify-between">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 h-14 flex items-center justify-between">
           {/* Logo */}
           <Link href="/" className="flex items-center gap-2 group">
             <div className="w-7 h-7 rounded-lg bg-accent/10 border border-accent/30 flex items-center justify-center group-hover:bg-accent/20 transition-colors">
               <Keyboard className="w-4 h-4 text-accent" />
             </div>
             <span className="font-mono font-semibold text-text-primary tracking-tight">
-              Type<span className="text-accent">Craft</span>
+              type<span className="text-accent">craft</span>
             </span>
           </Link>
 

@@ -9,79 +9,41 @@ import { useSocket } from '@/hooks/useSocket';
 import type { Room, Player } from '@/types';
 import { generateGuestUsername } from '@/lib/utils';
 import { cn } from '@/lib/utils';
+import { Users, Zap, Trophy } from 'lucide-react';
 
 type Phase = 'lobby' | 'countdown' | 'racing' | 'finished';
 
 export default function MultiplayerPage() {
-  const [phase, setPhase] = useState<Phase>('lobby');
-  const [room, setRoom] = useState<Room | null>(null);
-  const [players, setPlayers] = useState<Player[]>([]);
+  const [phase, setPhase]       = useState<Phase>('lobby');
+  const [room, setRoom]         = useState<Room | null>(null);
+  const [players, setPlayers]   = useState<Player[]>([]);
   const [countdown, setCountdown] = useState<number | null>(null);
-  const [error, setError] = useState<string>('');
-  const [socketId, setSocketId] = useState<string>('');
+  const [error, setError]       = useState('');
+  const [socketId, setSocketId] = useState('');
   const [username, setUsername] = useState(() => generateGuestUsername());
-  const progressThrottleRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  const throttleRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   const { createRoom, joinRoom, startGame, sendProgress, leaveRoom } = useSocket({
     onRoomCreated: (r) => {
-      setRoom(r);
-      setPlayers(r.players);
-      setError('');
-      // Get socket id from room
-      import('@/lib/socket').then(({ getSocket }) => {
-        setSocketId(getSocket().id || '');
-      });
+      setRoom(r); setPlayers(r.players); setError('');
+      import('@/lib/socket').then(({ getSocket }) => setSocketId(getSocket().id || ''));
     },
     onRoomJoined: (r) => {
-      setRoom(r);
-      setPlayers(r.players);
-      setError('');
-      import('@/lib/socket').then(({ getSocket }) => {
-        setSocketId(getSocket().id || '');
-      });
+      setRoom(r); setPlayers(r.players); setError('');
+      import('@/lib/socket').then(({ getSocket }) => setSocketId(getSocket().id || ''));
     },
-    onRoomError: (msg) => setError(msg),
-    onPlayerJoined: (_, r) => {
-      setRoom(r);
-      setPlayers(r.players);
-    },
-    onPlayerLeft: (_, r) => {
-      setRoom(r);
-      setPlayers(r.players);
-    },
-    onCountdown: (r) => {
-      setRoom(r);
-      setPhase('countdown');
-    },
-    onCountdownTick: (count) => {
-      setCountdown(count);
-    },
-    onRaceStart: (r) => {
-      setRoom(r);
-      setPlayers(r.players);
-      setCountdown(null);
-      setPhase('racing');
-    },
-    onProgressUpdate: (updatedPlayers) => {
-      setPlayers(updatedPlayers);
-    },
-    onPlayerFinished: (_, updatedPlayers) => {
-      setPlayers(updatedPlayers);
-    },
-    onRaceFinished: (r) => {
-      setRoom(r);
-      setPlayers(r.players);
-      setPhase('finished');
-    },
-    onRoomClosed: () => {
-      setRoom(null);
-      setPlayers([]);
-      setPhase('lobby');
-      setError('The room was closed by the host.');
-    },
+    onRoomError:    (msg) => setError(msg),
+    onPlayerJoined: (_, r) => { setRoom(r); setPlayers(r.players); },
+    onPlayerLeft:   (_, r) => { setRoom(r); setPlayers(r.players); },
+    onCountdown:    (r) => { setRoom(r); setPhase('countdown'); },
+    onCountdownTick: (n) => setCountdown(n),
+    onRaceStart:    (r) => { setRoom(r); setPlayers(r.players); setCountdown(null); setPhase('racing'); },
+    onProgressUpdate: (ps) => setPlayers(ps),
+    onPlayerFinished: (_, ps) => setPlayers(ps),
+    onRaceFinished: (r) => { setRoom(r); setPlayers(r.players); setPhase('finished'); },
+    onRoomClosed:   () => { setRoom(null); setPlayers([]); setPhase('lobby'); setError('Room was closed.'); },
   });
 
-  // Get socket ID on mount
   useEffect(() => {
     import('@/lib/socket').then(({ getSocket }) => {
       const s = getSocket();
@@ -90,130 +52,135 @@ export default function MultiplayerPage() {
     });
   }, []);
 
-  const handleCreateRoom = useCallback(() => {
-    createRoom(username || 'Anonymous');
-  }, [createRoom, username]);
-
-  const handleJoinRoom = useCallback(
-    (code: string) => {
-      joinRoom(code, username || 'Anonymous');
-    },
-    [joinRoom, username]
-  );
+  const handleProgressUpdate = useCallback((progress: number, wpm: number, accuracy: number) => {
+    if (throttleRef.current) return;
+    throttleRef.current = setTimeout(() => { throttleRef.current = null; }, 100);
+    sendProgress(progress, wpm, accuracy);
+  }, [sendProgress]);
 
   const handleLeaveRoom = useCallback(() => {
-    leaveRoom();
-    setRoom(null);
-    setPlayers([]);
-    setPhase('lobby');
-    setError('');
+    leaveRoom(); setRoom(null); setPlayers([]); setPhase('lobby'); setError('');
   }, [leaveRoom]);
-
-  const handleProgressUpdate = useCallback(
-    (progress: number, wpm: number, accuracy: number) => {
-      // Throttle to max 10 updates/sec
-      if (progressThrottleRef.current) return;
-      progressThrottleRef.current = setTimeout(() => {
-        progressThrottleRef.current = null;
-      }, 100);
-      sendProgress(progress, wpm, accuracy);
-    },
-    [sendProgress]
-  );
-
-  const handlePlayAgain = useCallback(() => {
-    setPhase('lobby');
-    setRoom(null);
-    setPlayers([]);
-  }, []);
 
   const isHost = room?.hostId === socketId;
 
   return (
-    <main className="min-h-screen flex flex-col">
+    <main className="min-h-screen bg-[#0f0f0f]">
       <Navbar />
 
-      <div className="flex-1 pt-20 pb-10 px-4">
-        <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto px-4 pt-20 pb-12">
 
-          {/* Page header */}
-          <div className="text-center mb-8">
-            <h1 className="text-2xl sm:text-3xl font-bold text-text-primary mb-2">
-              Multiplayer Race
-            </h1>
-            <p className="text-text-secondary text-sm">
-              Create a room, share the code, and race your friends in real-time
-            </p>
+        {/* Page header */}
+        <div className="text-center mb-8">
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#e2b714]/10 border border-[#e2b714]/20 text-[#e2b714] text-xs font-mono mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#e2b714] animate-pulse" />
+            Real-time multiplayer
           </div>
-
-          {/* Countdown overlay */}
-          {phase === 'countdown' && countdown !== null && (
-            <div className="fixed inset-0 z-50 flex items-center justify-center bg-bg/80 backdrop-blur-md">
-              <div className="text-center">
-                <div className="text-xs font-mono text-text-secondary uppercase tracking-widest mb-4">
-                  Race starts in
-                </div>
-                <div
-                  key={countdown}
-                  className="text-[10rem] font-mono font-black text-accent animate-countdown leading-none"
-                >
-                  {countdown === 0 ? 'GO!' : countdown}
-                </div>
-              </div>
-            </div>
-          )}
-
-          {/* Lobby */}
-          {(phase === 'lobby' || phase === 'countdown') && (
-            <RoomLobby
-              room={room}
-              currentSocketId={socketId}
-              isHost={isHost}
-              onCreateRoom={handleCreateRoom}
-              onJoinRoom={handleJoinRoom}
-              onStartGame={startGame}
-              onLeaveRoom={handleLeaveRoom}
-              error={error}
-              username={username}
-              onUsernameChange={setUsername}
-            />
-          )}
-
-          {/* Racing */}
-          {phase === 'racing' && room && (
-            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-              {/* Typing area */}
-              <div className="lg:col-span-2">
-                <TypingTest
-                  externalWords={room.words}
-                  onProgressUpdate={handleProgressUpdate}
-                  hideSettings
-                />
-              </div>
-
-              {/* Race sidebar */}
-              <div className="space-y-4">
-                <RaceTrack players={players} currentSocketId={socketId} />
-              </div>
-            </div>
-          )}
-
-          {/* Finished */}
-          {phase === 'finished' && (
-            <div className="max-w-2xl mx-auto space-y-6">
-              <Leaderboard players={players} currentSocketId={socketId} />
-
-              <div className="text-center">
-                <button
-                  onClick={handlePlayAgain}
-                  className="px-8 py-3 bg-accent text-bg font-bold rounded-xl hover:bg-accent-hover transition-all hover:scale-[1.02] active:scale-[0.98] shadow-lg shadow-accent/20"
-                >
-                  Play Again
-                </button>
-              </div>
-            </div>
-          )}
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#d1d0c5] mb-2">Race Room</h1>
+          <p className="text-[#646669] text-sm">Create a room, share the code, race your friends live</p>
         </div>
+
+        {/* ── Countdown overlay ── */}
+        {phase === 'countdown' && countdown !== null && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0f0f0f]/90 backdrop-blur-md">
+            <div className="text-center">
+              <p className="text-sm font-mono text-[#646669] uppercase tracking-widest mb-6">Race starts in</p>
+              <div
+                key={countdown}
+                className="font-mono font-black text-[#e2b714] leading-none animate-countdown"
+                style={{ fontSize: 'clamp(80px, 20vw, 160px)' }}
+              >
+                {countdown === 0 ? 'GO!' : countdown}
+              </div>
+              {room && (
+                <div className="mt-8 flex items-center justify-center gap-3">
+                  {room.players.map(p => (
+                    <div key={p.id} className="flex items-center gap-1.5 bg-[#1a1a1a] border border-white/8 rounded-lg px-3 py-1.5">
+                      <div className="w-2 h-2 rounded-full bg-[#e2b714] animate-pulse" />
+                      <span className="text-sm font-mono text-[#d1d0c5]">{p.username}</span>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </div>
+          </div>
+        )}
+
+        {/* ── LOBBY ── */}
+        {(phase === 'lobby' || phase === 'countdown') && (
+          <RoomLobby
+            room={room}
+            currentSocketId={socketId}
+            isHost={isHost}
+            onCreateRoom={() => createRoom(username || 'Anonymous')}
+            onJoinRoom={(code) => joinRoom(code, username || 'Anonymous')}
+            onStartGame={startGame}
+            onLeaveRoom={handleLeaveRoom}
+            error={error}
+            username={username}
+            onUsernameChange={setUsername}
+          />
+        )}
+
+        {/* ── RACING ── */}
+        {phase === 'racing' && room && (
+          <div className="grid grid-cols-1 lg:grid-cols-5 gap-5">
+            {/* Typing area */}
+            <div className="lg:col-span-3">
+              <TypingTest
+                externalWords={room.words}
+                onProgressUpdate={handleProgressUpdate}
+                hideSettings
+              />
+            </div>
+            {/* Race sidebar */}
+            <div className="lg:col-span-2">
+              <RaceTrack players={players} currentSocketId={socketId} />
+            </div>
+          </div>
+        )}
+
+        {/* ── FINISHED ── */}
+        {phase === 'finished' && (
+          <div className="max-w-2xl mx-auto space-y-5">
+            {/* Winner banner */}
+            {(() => {
+              const winner = [...players].sort((a, b) => {
+                if (a.finished && b.finished) return (a.finishTime ?? 0) - (b.finishTime ?? 0);
+                if (a.finished) return -1;
+                return b.wpm - a.wpm;
+              })[0];
+              const isMe = winner?.socketId === socketId;
+              return winner ? (
+                <div className={cn(
+                  'rounded-2xl p-6 text-center border',
+                  isMe
+                    ? 'bg-[#e2b714]/10 border-[#e2b714]/30'
+                    : 'bg-[#1a1a1a] border-white/8'
+                )}>
+                  <div className="text-3xl mb-2">🏆</div>
+                  <div className="text-lg font-bold text-[#d1d0c5]">
+                    {isMe ? 'You won!' : `${winner.username} wins!`}
+                  </div>
+                  <div className="text-sm text-[#646669] mt-1 font-mono">
+                    {winner.wpm} wpm · {winner.accuracy}% accuracy
+                  </div>
+                </div>
+              ) : null;
+            })()}
+
+            <Leaderboard players={players} currentSocketId={socketId} />
+
+            <div className="flex items-center justify-center gap-3">
+              <button
+                onClick={handleLeaveRoom}
+                className="px-8 py-3 bg-[#e2b714] text-[#0f0f0f] font-bold rounded-xl hover:bg-[#f0ca2d] transition-colors shadow-lg shadow-[#e2b714]/20"
+              >
+                Play Again
+              </button>
+            </div>
+          </div>
+        )}
       </div>
     </main>
   );
