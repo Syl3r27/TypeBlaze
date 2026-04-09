@@ -62,9 +62,18 @@ function commitWord(prev: WordState[], idx: number, typed: string): WordState[] 
 }
 
 export function useTypingEngine({ timerMode, externalWords, onComplete }: UseTypingEngineProps) {
-  const totalSeconds = parseInt(timerMode);
-  const [words, setWords]               = useState<string[]>(() => externalWords ?? generateWords(120));
-  const [wordStates, setWordStates]     = useState<WordState[]>(() => makeFreshWordStates(externalWords ?? generateWords(120)));
+  // FIX 1: parseInt must always use radix 10
+  const totalSeconds = parseInt(timerMode, 10);
+
+  // FIX 2: Generate words ONCE using a ref so both `words` and `wordStates`
+  // are initialised from the exact same array. Previously, two independent
+  // generateWords(120) calls produced two different random arrays, making the
+  // displayed words and the typing targets completely out of sync in production.
+  const initialWordsRef = useRef<string[]>(externalWords ?? generateWords(120));
+
+  const [words, setWords]           = useState<string[]>(() => initialWordsRef.current);
+  const [wordStates, setWordStates] = useState<WordState[]>(() => makeFreshWordStates(initialWordsRef.current));
+
   const [currentWordIndex, setCWI]      = useState(0);
   const [currentInput, setCurrentInput] = useState('');
   const [timeLeft, setTimeLeft]         = useState(totalSeconds);
@@ -82,7 +91,8 @@ export function useTypingEngine({ timerMode, externalWords, onComplete }: UseTyp
   const finishedRef   = useRef(false);
   const runningRef    = useRef(false);
   const onCompleteRef = useRef(onComplete);
-  const wordsRef      = useRef(words);
+  const wordsRef      = useRef(initialWordsRef.current);
+
   useEffect(() => { onCompleteRef.current = onComplete; }, [onComplete]);
   useEffect(() => { wordsRef.current = words; }, [words]);
 
@@ -118,7 +128,6 @@ export function useTypingEngine({ timerMode, externalWords, onComplete }: UseTyp
     }, 100);
   }, [totalSeconds, finishTest]);
 
-  // Advance word — called by both space key and mobile input logic
   const advanceWord = useCallback((typed: string) => {
     if (typed.length === 0) return;
     const idx        = wordIdxRef.current;
@@ -141,7 +150,6 @@ export function useTypingEngine({ timerMode, externalWords, onComplete }: UseTyp
     setCurrentInput('');
   }, []);
 
-  // ── onKeyDown: handles Space + Tab (works on desktop, partial on mobile) ──
   const handleKeyDown = useCallback((e: React.KeyboardEvent<HTMLInputElement>) => {
     if (finishedRef.current) return;
     if (e.key === ' ') {
@@ -152,13 +160,11 @@ export function useTypingEngine({ timerMode, externalWords, onComplete }: UseTyp
     }
   }, [startTimer, advanceWord]);
 
-  // ── onChange: handles all character input INCLUDING space on mobile ──
   const handleChange = useCallback((value: string) => {
     if (finishedRef.current) return;
 
-    // Mobile virtual keyboards often send space through onChange, not onKeyDown
     if (value.endsWith(' ')) {
-      const typed = value.slice(0, -1).trimStart(); // strip leading space too
+      const typed = value.slice(0, -1).trimStart();
       if (!runningRef.current && typed.length > 0) startTimer();
       advanceWord(typed);
       return;
@@ -182,6 +188,7 @@ export function useTypingEngine({ timerMode, externalWords, onComplete }: UseTyp
     wordIdxRef.current  = 0;
     finishedRef.current = false;
     runningRef.current  = false;
+    // FIX 3: also generate once on reset — same pattern as initial mount
     const w = newWords ?? (externalWords ?? generateWords(120));
     wordsRef.current = w;
     setWords(w);
