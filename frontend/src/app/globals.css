@@ -19,8 +19,8 @@ html,
 body {
   max-width: 100vw;
   overflow-x: hidden;
-  background-color: #0f0f0f;
-  color: #d1d0c5;
+  background-color: #2a2a2a;
+  color: #fff1d3;
   font-family: "Lexend", sans-serif;
 }
 
@@ -29,20 +29,20 @@ body {
   width: 5px;
 }
 ::-webkit-scrollbar-track {
-  background: #171717;
+  background: #333333;
 }
 ::-webkit-scrollbar-thumb {
-  background: #3a3a3c;
+  background: #ffb090;
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #646669;
+  background: #ffc0a5;
 }
 
 /* Selection */
 ::selection {
-  background: #e2b71433;
-  color: #e2b714;
+  background: #ffb09044;
+  color: #ffb090;
 }
 
 /* Typing test text cursor */
@@ -50,7 +50,7 @@ body {
   display: inline-block;
   width: 2px;
   height: 1.2em;
-  background-color: #e2b714;
+  background-color: #ffb090;
   border-radius: 1px;
   animation: caretBlink 1s ease infinite;
   vertical-align: text-bottom;
@@ -59,18 +59,18 @@ body {
 
 /* Word states */
 .letter-correct {
-  color: #d1d0c5;
+  color: #fff1d3;
 }
 .letter-incorrect {
-  color: #ca4754;
+  color: #ca5995;
   text-decoration: underline;
   text-underline-offset: 3px;
 }
 .letter-pending {
-  color: #646669;
+  color: #d4b5a0;
 }
 .letter-extra {
-  color: #ca4754;
+  color: #ca5995;
   opacity: 0.7;
 }
 
@@ -82,7 +82,7 @@ button {
 
 /* Focus styles */
 *:focus-visible {
-  outline: 2px solid #e2b714;
+  outline: 2px solid #ffb090;
   outline-offset: 2px;
 }
 
@@ -91,12 +91,12 @@ button {
   background: rgba(36, 36, 36, 0.6);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.06);
+  border: 1px solid rgba(255, 176, 144, 0.1);
 }
 
 /* Gradient text */
 .gradient-text {
-  background: linear-gradient(135deg, #e2b714 0%, #f0ca2d 50%, #e2b714 100%);
+  background: linear-gradient(135deg, #ffb090 0%, #ca5995 50%, #ffb090 100%);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;

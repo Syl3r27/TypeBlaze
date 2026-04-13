@@ -50,7 +50,7 @@ function getHeatColor(count: number, max: number): string {
   if (pct < 0.25) return '#3d3000';
   if (pct < 0.5)  return '#7a6000';
   if (pct < 0.75) return '#b38c00';
-  return '#e2b714';
+  return '#CA5995';
 }
 
 function getLast12MonthsWeeks() {
@@ -142,25 +142,25 @@ export default function ProfilePage() {
   }, [isLoggedIn, user, allResults]);
 
   return (
-    <main className="min-h-screen bg-[#0f0f0f]">
+    <main className="min-h-screen bg-[#2A2A2A]">
       <Navbar />
       <div className="max-w-4xl mx-auto px-4 pt-20 pb-16">
 
         {/* ── Header ── */}
         <div className="flex items-center justify-between mb-8">
           <div className="flex items-center gap-3">
-            <Link href="/" className="p-2 rounded-lg text-[#646669] hover:text-[#d1d0c5] hover:bg-[#242424] transition-colors">
+            <Link href="/" className="p-2 rounded-lg text-[#D4B5A0] hover:text-[#FFF1D3] hover:bg-[#1a252f] transition-colors">
               <ArrowLeft className="w-4 h-4" />
             </Link>
             <div className="flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-[#e2b714]/10 border border-[#e2b714]/20 flex items-center justify-center">
-                <Keyboard className="w-5 h-5 text-[#e2b714]" />
+              <div className="w-10 h-10 rounded-xl bg-[#CA5995]/10 border border-[#CA5995]/20 flex items-center justify-center">
+                <Keyboard className="w-5 h-5 text-[#CA5995]" />
               </div>
               <div>
-                <h1 className="text-lg font-bold text-[#d1d0c5]">
+                <h1 className="text-lg font-bold text-[#FFF1D3]">
                   {isLoggedIn ? user?.username : 'Guest'}
                 </h1>
-                <p className="text-xs text-[#646669]">
+                <p className="text-xs text-[#D4B5A0]">
                   {isLoggedIn ? user?.email : 'Playing as guest · sign in to save progress'}
                 </p>
               </div>
@@ -168,7 +168,7 @@ export default function ProfilePage() {
           </div>
           {isLoggedIn && (
             <button onClick={logout}
-              className="flex items-center gap-1.5 px-3 py-2 text-sm text-[#646669] hover:text-[#d1d0c5] hover:bg-[#242424] rounded-lg transition-colors">
+              className="flex items-center gap-1.5 px-3 py-2 text-sm text-[#D4B5A0] hover:text-[#FFF1D3] hover:bg-[#1a252f] rounded-lg transition-colors">
               <LogOut className="w-3.5 h-3.5" />
               <span className="hidden sm:inline">Sign out</span>
             </button>
@@ -177,12 +177,12 @@ export default function ProfilePage() {
 
         {/* ── Guest CTA ── */}
         {!isLoggedIn && (
-          <div className="bg-[#1a1a1a] border border-[#e2b714]/20 rounded-2xl p-5 mb-6 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
+          <div className="bg-[#1a1a1a] border border-[#CA5995]/20 rounded-2xl p-5 mb-6 flex flex-col sm:flex-row sm:items-center gap-4 justify-between">
             <div>
-              <p className="font-semibold text-[#d1d0c5] mb-0.5">Create a free account</p>
-              <p className="text-sm text-[#646669]">Save stats permanently, appear on the global leaderboard</p>
+              <p className="font-semibold text-[#FFF1D3] mb-0.5">Create a free account</p>
+              <p className="text-sm text-[#D4B5A0]">Save stats permanently, appear on the global leaderboard</p>
             </div>
-            <Link href="/" className="px-5 py-2.5 bg-[#e2b714] text-[#0f0f0f] text-sm font-bold rounded-xl hover:bg-[#f0ca2d] transition-colors whitespace-nowrap">
+            <Link href="/" className="px-5 py-2.5 bg-[#CA5995] text-[#2A2A2A] text-sm font-bold rounded-xl hover:bg-[#D4709A] transition-colors whitespace-nowrap">
               Sign Up Free
             </Link>
           </div>
@@ -198,10 +198,10 @@ export default function ProfilePage() {
           </div>
         ) : !loading && (
           <div className="bg-[#1a1a1a] border border-white/8 rounded-2xl p-10 text-center mb-6">
-            <BarChart3 className="w-10 h-10 text-[#3a3a3c] mx-auto mb-3" />
-            <p className="text-[#646669] text-sm">
+            <BarChart3 className="w-10 h-10 text-[#6a7680] mx-auto mb-3" />
+            <p className="text-[#D4B5A0] text-sm">
               No tests yet.{' '}
-              <Link href="/test" className="text-[#e2b714] hover:underline">Take your first test →</Link>
+              <Link href="/test" className="text-[#CA5995] hover:underline">Take your first test →</Link>
             </p>
           </div>
         )}
@@ -212,12 +212,12 @@ export default function ProfilePage() {
         )}
 
         {/* ── Tabs ── */}
-        <div className="flex gap-1 bg-[#171717] border border-white/5 rounded-xl p-1 mb-4">
+        <div className="flex gap-1 bg-[#333333] border border-white/5 rounded-xl p-1 mb-4">
           {(['stats', 'history', 'leaderboard'] as const).map(t => (
             <button key={t} onClick={() => setActiveTab(t)}
               className={cn(
                 'flex-1 py-2 text-sm font-medium rounded-lg capitalize transition-all',
-                activeTab === t ? 'bg-[#e2b714] text-[#0f0f0f] shadow' : 'text-[#646669] hover:text-[#d1d0c5]'
+                activeTab === t ? 'bg-[#CA5995] text-[#2A2A2A] shadow' : 'text-[#D4B5A0] hover:text-[#FFF1D3]'
               )}>
               {t}
             </button>
@@ -257,12 +257,12 @@ function ActivityHeatmap({ results }: { results: HistoryResult[] }) {
       {/* Header */}
       <div className="flex items-center justify-between mb-4">
         <div className="flex items-center gap-2">
-          <span className="text-sm font-medium text-[#d1d0c5]">Activity</span>
-          <span className="text-xs text-[#646669] font-mono">{total} tests in the last year</span>
+          <span className="text-sm font-medium text-[#FFF1D3]">Activity</span>
+          <span className="text-xs text-[#D4B5A0] font-mono">{total} tests in the last year</span>
         </div>
-        <div className="flex items-center gap-1.5 text-xs text-[#646669]">
+        <div className="flex items-center gap-1.5 text-xs text-[#D4B5A0]">
           <span>less</span>
-          {['#1a1a1a', '#3d3000', '#7a6000', '#b38c00', '#e2b714'].map(c => (
+          {['#1a1a1a', '#3d3000', '#7a6000', '#b38c00', '#CA5995'].map(c => (
             <span key={c} className="w-2.5 h-2.5 rounded-sm inline-block" style={{ backgroundColor: c }} />
           ))}
           <span>more</span>
@@ -278,7 +278,7 @@ function ActivityHeatmap({ results }: { results: HistoryResult[] }) {
               const m = months.find(m => m.col === wi);
               return (
                 <div key={wi} style={{ width: '13px', flexShrink: 0 }}
-                  className="text-[9px] text-[#646669] font-mono overflow-visible whitespace-nowrap">
+                  className="text-[9px] text-[#D4B5A0] font-mono overflow-visible whitespace-nowrap">
                   {m ? m.label : ''}
                 </div>
               );
@@ -291,7 +291,7 @@ function ActivityHeatmap({ results }: { results: HistoryResult[] }) {
             <div className="flex flex-col mr-1" style={{ width: '24px' }}>
               {DAYS.map((d, i) => (
                 <div key={i} style={{ height: '11px', marginBottom: '2px' }}
-                  className="text-[9px] text-[#646669] font-mono flex items-center justify-end pr-1">
+                  className="text-[9px] text-[#D4B5A0] font-mono flex items-center justify-end pr-1">
                   {d}
                 </div>
               ))}
@@ -334,7 +334,7 @@ function ActivityHeatmap({ results }: { results: HistoryResult[] }) {
       {/* Tooltip */}
       {tooltip && (
         <div
-          className="fixed z-50 pointer-events-none bg-[#242424] border border-white/10 rounded-lg px-2.5 py-1.5 text-xs font-mono text-[#d1d0c5] shadow-xl"
+          className="fixed z-50 pointer-events-none bg-[#1a252f] border border-white/10 rounded-lg px-2.5 py-1.5 text-xs font-mono text-[#FFF1D3] shadow-xl"
           style={{ left: tooltip.x, top: tooltip.y - 40 }}
         >
           {tooltip.count === 0
@@ -343,7 +343,7 @@ function ActivityHeatmap({ results }: { results: HistoryResult[] }) {
         </div>
       )}
 
-      <p className="text-[10px] text-[#3a3a3c] font-mono mt-3 text-center">
+      <p className="text-[10px] text-[#6a7680] font-mono mt-3 text-center">
         Activity data is based on local time
       </p>
     </div>
@@ -356,7 +356,7 @@ function StatsTab({ results }: { results: HistoryResult[] }) {
   if (results.length === 0) {
     return (
       <div className="bg-[#1a1a1a] border border-white/8 rounded-2xl p-10 text-center">
-        <p className="text-[#646669] text-sm">Complete some tests to see your charts.</p>
+        <p className="text-[#D4B5A0] text-sm">Complete some tests to see your charts.</p>
       </div>
     );
   }
@@ -368,8 +368,8 @@ function StatsTab({ results }: { results: HistoryResult[] }) {
     <div className="space-y-4">
       {/* WPM chart */}
       <div className="bg-[#1a1a1a] border border-white/8 rounded-2xl p-6">
-        <div className="flex items-center gap-2 text-sm font-medium text-[#d1d0c5] mb-5">
-          <TrendingUp className="w-4 h-4 text-[#e2b714]" />
+        <div className="flex items-center gap-2 text-sm font-medium text-[#FFF1D3] mb-5">
+          <TrendingUp className="w-4 h-4 text-[#CA5995]" />
           WPM — last {last20.length} tests
         </div>
         <div className="flex items-end gap-1.5 h-28">
@@ -378,11 +378,11 @@ function StatsTab({ results }: { results: HistoryResult[] }) {
             return (
               <div key={i} className="flex-1 flex flex-col items-center gap-1 group relative">
                 {/* Hover tooltip */}
-                <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-[#242424] border border-white/10 rounded-md px-1.5 py-0.5 text-[10px] font-mono text-[#d1d0c5] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-[#1a252f] border border-white/10 rounded-md px-1.5 py-0.5 text-[10px] font-mono text-[#FFF1D3] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
                   {r.wpm} wpm
                 </div>
                 <div
-                  className="w-full rounded-t bg-[#e2b714]/60 hover:bg-[#e2b714] transition-colors"
+                  className="w-full rounded-t bg-[#CA5995]/60 hover:bg-[#CA5995] transition-colors"
                   style={{ height: `${pct}%` }}
                 />
               </div>
@@ -392,7 +392,7 @@ function StatsTab({ results }: { results: HistoryResult[] }) {
         {/* X-axis labels */}
         <div className="flex items-center gap-1.5 mt-2">
           {last20.map((r, i) => (
-            <div key={i} className="flex-1 text-center text-[9px] text-[#3a3a3c] font-mono">
+            <div key={i} className="flex-1 text-center text-[9px] text-[#6a7680] font-mono">
               {i === 0 ? 'oldest' : i === last20.length - 1 ? 'latest' : ''}
             </div>
           ))}
@@ -401,17 +401,17 @@ function StatsTab({ results }: { results: HistoryResult[] }) {
 
       {/* Accuracy chart */}
       <div className="bg-[#1a1a1a] border border-white/8 rounded-2xl p-6">
-        <div className="flex items-center gap-2 text-sm font-medium text-[#d1d0c5] mb-5">
-          <Target className="w-4 h-4 text-[#e2b714]" />
+        <div className="flex items-center gap-2 text-sm font-medium text-[#FFF1D3] mb-5">
+          <Target className="w-4 h-4 text-[#CA5995]" />
           Accuracy trend
         </div>
         <div className="flex items-end gap-1.5 h-20">
           {last20.map((r, i) => {
             const pct   = Math.max(r.accuracy, 2);
-            const color = r.accuracy >= 95 ? '#4caf79' : r.accuracy >= 85 ? '#e2b714' : '#ca4754';
+            const color = r.accuracy >= 95 ? '#6a9a7a' : r.accuracy >= 85 ? '#CA5995' : '#9a6a7a';
             return (
               <div key={i} className="flex-1 flex flex-col items-center gap-1 group relative">
-                <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-[#242424] border border-white/10 rounded-md px-1.5 py-0.5 text-[10px] font-mono text-[#d1d0c5] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
+                <div className="absolute -top-7 left-1/2 -translate-x-1/2 bg-[#1a252f] border border-white/10 rounded-md px-1.5 py-0.5 text-[10px] font-mono text-[#FFF1D3] opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none whitespace-nowrap z-10">
                   {r.accuracy}%
                 </div>
                 <div
@@ -431,9 +431,9 @@ function StatsTab({ results }: { results: HistoryResult[] }) {
           { label: 'Avg accuracy',  value: `${Math.round(last20.reduce((a,r) => a + r.accuracy, 0) / last20.length)}%` },
           { label: 'Total time',    value: formatTime(last20.reduce((a,r) => a + r.duration, 0)) },
         ].map(s => (
-          <div key={s.label} className="bg-[#171717] border border-white/5 rounded-xl p-4 text-center">
-            <div className="text-lg font-mono font-bold text-[#d1d0c5]">{s.value}</div>
-            <div className="text-xs text-[#646669] mt-0.5">{s.label}</div>
+          <div key={s.label} className="bg-[#333333] border border-white/5 rounded-xl p-4 text-center">
+            <div className="text-lg font-mono font-bold text-[#FFF1D3]">{s.value}</div>
+            <div className="text-xs text-[#D4B5A0] mt-0.5">{s.label}</div>
           </div>
         ))}
       </div>
@@ -448,23 +448,23 @@ function HistoryTab({ results, loading, onRefresh, isLoggedIn }: {
 }) {
   if (loading) return (
     <div className="bg-[#1a1a1a] border border-white/8 rounded-2xl p-12 flex justify-center">
-      <div className="w-5 h-5 border-2 border-[#e2b714] border-t-transparent rounded-full animate-spin" />
+      <div className="w-5 h-5 border-2 border-[#CA5995] border-t-transparent rounded-full animate-spin" />
     </div>
   );
   if (results.length === 0) return (
     <div className="bg-[#1a1a1a] border border-white/8 rounded-2xl p-10 text-center">
-      <Clock className="w-8 h-8 text-[#3a3a3c] mx-auto mb-3" />
-      <p className="text-[#646669] text-sm">No history yet.</p>
-      <Link href="/test" className="inline-block mt-3 text-sm text-[#e2b714] hover:underline">Take a test →</Link>
+      <Clock className="w-8 h-8 text-[#6a7680] mx-auto mb-3" />
+      <p className="text-[#D4B5A0] text-sm">No history yet.</p>
+      <Link href="/test" className="inline-block mt-3 text-sm text-[#CA5995] hover:underline">Take a test →</Link>
     </div>
   );
 
   return (
     <div className="space-y-2">
       <div className="flex justify-between items-center mb-3">
-        <span className="text-xs text-[#646669] font-mono">{results.length} results</span>
+        <span className="text-xs text-[#D4B5A0] font-mono">{results.length} results</span>
         {isLoggedIn && (
-          <button onClick={onRefresh} className="flex items-center gap-1 text-xs text-[#646669] hover:text-[#d1d0c5] transition-colors">
+          <button onClick={onRefresh} className="flex items-center gap-1 text-xs text-[#D4B5A0] hover:text-[#FFF1D3] transition-colors">
             <RefreshCw className="w-3 h-3" /> Refresh
           </button>
         )}
@@ -472,7 +472,7 @@ function HistoryTab({ results, loading, onRefresh, isLoggedIn }: {
 
       {results.map((r, i) => {
         const grade      = r.wpm >= 80 ? 'S' : r.wpm >= 60 ? 'A' : r.wpm >= 40 ? 'B' : r.wpm >= 20 ? 'C' : 'D';
-        const gradeColor = grade === 'S' ? '#e2b714' : grade === 'A' ? '#4caf79' : grade === 'B' ? '#5c8ee2' : '#646669';
+        const gradeColor = grade === 'S' ? '#CA5995' : grade === 'A' ? '#6a9a7a' : grade === 'B' ? '#5c8ee2' : '#D4B5A0';
         return (
           <div key={r._id || i}
             className="bg-[#1a1a1a] border border-white/5 hover:border-white/10 rounded-xl p-4 flex items-center gap-4 transition-colors">
@@ -481,18 +481,18 @@ function HistoryTab({ results, loading, onRefresh, isLoggedIn }: {
             </div>
             <div className="flex-1 min-w-0">
               <div className="flex items-baseline gap-2 flex-wrap">
-                <span className="text-xl font-mono font-bold text-[#e2b714]">{r.wpm}</span>
-                <span className="text-sm text-[#646669] font-mono">wpm</span>
-                <span className="text-sm text-[#d1d0c5] font-mono">{r.accuracy}%</span>
+                <span className="text-xl font-mono font-bold text-[#CA5995]">{r.wpm}</span>
+                <span className="text-sm text-[#D4B5A0] font-mono">wpm</span>
+                <span className="text-sm text-[#FFF1D3] font-mono">{r.accuracy}%</span>
               </div>
-              <div className="flex items-center gap-2 text-xs text-[#646669] mt-0.5 font-mono flex-wrap">
+              <div className="flex items-center gap-2 text-xs text-[#D4B5A0] mt-0.5 font-mono flex-wrap">
                 <span>{r.mode}s</span>
-                <span className="text-[#3a3a3c]">·</span>
+                <span className="text-[#6a7680]">·</span>
                 <span>{r.wordCount} words</span>
-                {r.errors > 0 && <><span className="text-[#3a3a3c]">·</span><span className="text-[#ca4754]">{r.errors} err</span></>}
+                {r.errors > 0 && <><span className="text-[#6a7680]">·</span><span className="text-[#9a6a7a]">{r.errors} err</span></>}
               </div>
             </div>
-            <div className="text-xs text-[#3a3a3c] font-mono flex-shrink-0">{formatDate(r.createdAt)}</div>
+            <div className="text-xs text-[#6a7680] font-mono flex-shrink-0">{formatDate(r.createdAt)}</div>
           </div>
         );
       })}
@@ -505,8 +505,8 @@ function HistoryTab({ results, loading, onRefresh, isLoggedIn }: {
 function LeaderboardTab({ entries, currentUsername }: { entries: LeaderboardEntry[]; currentUsername?: string }) {
   if (entries.length === 0) return (
     <div className="bg-[#1a1a1a] border border-white/8 rounded-2xl p-10 text-center">
-      <Trophy className="w-8 h-8 text-[#3a3a3c] mx-auto mb-3" />
-      <p className="text-[#646669] text-sm">No scores yet. Be the first!</p>
+      <Trophy className="w-8 h-8 text-[#6a7680] mx-auto mb-3" />
+      <p className="text-[#D4B5A0] text-sm">No scores yet. Be the first!</p>
     </div>
   );
 
@@ -519,19 +519,19 @@ function LeaderboardTab({ entries, currentUsername }: { entries: LeaderboardEntr
           <div key={e._id}
             className={cn(
               'flex items-center gap-4 rounded-xl px-4 py-3 border transition-colors',
-              isMe ? 'bg-[#e2b714]/8 border-[#e2b714]/30' : 'bg-[#1a1a1a] border-white/5 hover:border-white/10'
+              isMe ? 'bg-[#CA5995]/8 border-[#CA5995]/30' : 'bg-[#1a1a1a] border-white/5 hover:border-white/10'
             )}>
             <div className="w-8 text-center flex-shrink-0">
               {i < 3 ? <span className="text-lg">{medals[i]}</span>
-                      : <span className="text-sm font-mono text-[#646669]">#{i+1}</span>}
+                      : <span className="text-sm font-mono text-[#D4B5A0]">#{i+1}</span>}
             </div>
-            <div className={cn('flex-1 font-medium', isMe ? 'text-[#e2b714]' : 'text-[#d1d0c5]')}>
+            <div className={cn('flex-1 font-medium', isMe ? 'text-[#CA5995]' : 'text-[#FFF1D3]')}>
               {e.userId?.username ?? 'Anonymous'}
-              {isMe && <span className="text-xs text-[#646669] ml-1">(you)</span>}
+              {isMe && <span className="text-xs text-[#D4B5A0] ml-1">(you)</span>}
             </div>
             <div className="text-right">
-              <div className="font-mono font-bold text-[#e2b714]">{e.wpm}</div>
-              <div className="text-xs text-[#646669] font-mono">{e.accuracy}%</div>
+              <div className="font-mono font-bold text-[#CA5995]">{e.wpm}</div>
+              <div className="text-xs text-[#D4B5A0] font-mono">{e.accuracy}%</div>
             </div>
           </div>
         );
@@ -546,13 +546,13 @@ function StatCard({ icon, label, value, gold }: { icon: React.ReactNode; label: 
   return (
     <div className={cn(
       'rounded-xl p-4 border',
-      gold ? 'bg-[#e2b714]/8 border-[#e2b714]/20' : 'bg-[#1a1a1a] border-white/5'
+      gold ? 'bg-[#CA5995]/8 border-[#CA5995]/20' : 'bg-[#1a1a1a] border-white/5'
     )}>
-      <div className={cn('mb-2', gold ? 'text-[#e2b714]' : 'text-[#646669]')}>{icon}</div>
-      <div className={cn('text-2xl font-mono font-bold', gold ? 'text-[#e2b714]' : 'text-[#d1d0c5]')}>
+      <div className={cn('mb-2', gold ? 'text-[#CA5995]' : 'text-[#D4B5A0]')}>{icon}</div>
+      <div className={cn('text-2xl font-mono font-bold', gold ? 'text-[#CA5995]' : 'text-[#FFF1D3]')}>
         {value}
       </div>
-      <div className="text-xs text-[#646669] mt-0.5">{label}</div>
+      <div className="text-xs text-[#D4B5A0] mt-0.5">{label}</div>
     </div>
   );
 }

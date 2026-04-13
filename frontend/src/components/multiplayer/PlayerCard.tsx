@@ -88,7 +88,7 @@ export function PlayerCard({ player, isHost, isCurrentUser, rank }: PlayerCardPr
 
 function stringToColor(str: string): string {
   const colors = [
-    '#e2b714', '#4caf79', '#5c8ee2', '#e25c8e',
+    '#CA5995', '#6a9a7a', '#5c8ee2', '#e25c8e',
     '#8e5ce2', '#e2705c', '#5ce2d4', '#c4e25c',
   ];
   let hash = 0;

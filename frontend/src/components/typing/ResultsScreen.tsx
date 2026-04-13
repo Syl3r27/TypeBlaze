@@ -62,7 +62,7 @@ export function ResultsScreen({ result, onRetry }: ResultsScreenProps) {
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
         )}
       >
-        <div className="text-xs font-mono text-[#646669] uppercase tracking-widest mb-5">
+        <div className="text-xs font-mono text-[#D4B5A0] uppercase tracking-widest mb-5">
           Test Complete
         </div>
 
@@ -78,10 +78,10 @@ export function ResultsScreen({ result, onRetry }: ResultsScreenProps) {
 
         {/* WPM hero */}
         <div className="mb-6">
-          <div className="text-8xl font-mono font-bold text-[#e2b714] tabular-nums leading-none">
+          <div className="text-8xl font-mono font-bold text-[#CA5995] tabular-nums leading-none">
             {displayWpm}
           </div>
-          <div className="text-[#646669] font-mono text-sm mt-2 uppercase tracking-widest">
+          <div className="text-[#D4B5A0] font-mono text-sm mt-2 uppercase tracking-widest">
             words per minute
           </div>
         </div>
@@ -117,7 +117,7 @@ export function ResultsScreen({ result, onRetry }: ResultsScreenProps) {
           visible ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-6'
         )}
       >
-        <div className="flex items-center gap-2 text-xs font-mono text-[#646669] uppercase tracking-widest mb-4">
+        <div className="flex items-center gap-2 text-xs font-mono text-[#D4B5A0] uppercase tracking-widest mb-4">
           <TrendingUp className="w-3.5 h-3.5" />
           Breakdown
         </div>
@@ -138,21 +138,21 @@ export function ResultsScreen({ result, onRetry }: ResultsScreenProps) {
       >
         <button
           onClick={onRetry}
-          className="flex items-center gap-2 px-6 py-3 bg-[#e2b714] text-[#0f0f0f] font-bold rounded-xl hover:bg-[#f0ca2d] transition-colors shadow-lg shadow-[#e2b714]/20"
+          className="flex items-center gap-2 px-6 py-3 bg-[#CA5995] text-[#2A2A2A] font-bold rounded-xl hover:bg-[#D4709A] transition-colors shadow-lg shadow-[#CA5995]/20"
         >
           <RotateCcw className="w-4 h-4" />
           Retry
         </button>
         <Link
           href="/"
-          className="flex items-center gap-2 px-5 py-3 bg-[#242424] border border-white/8 text-[#d1d0c5] font-medium rounded-xl hover:bg-[#2e2e2e] transition-colors"
+          className="flex items-center gap-2 px-5 py-3 bg-[#1a252f] border border-white/8 text-[#FFF1D3] font-medium rounded-xl hover:bg-[#22303f] transition-colors"
         >
           <Home className="w-4 h-4" />
           Home
         </Link>
         <button
           onClick={handleCopy}
-          className="flex items-center gap-2 px-5 py-3 bg-[#242424] border border-white/8 text-[#646669] hover:text-[#d1d0c5] font-medium rounded-xl hover:bg-[#2e2e2e] transition-colors"
+          className="flex items-center gap-2 px-5 py-3 bg-[#1a252f] border border-white/8 text-[#D4B5A0] hover:text-[#FFF1D3] font-medium rounded-xl hover:bg-[#22303f] transition-colors"
           title="Copy result"
         >
           {copied ? <Check className="w-4 h-4 text-green-400" /> : <Share2 className="w-4 h-4" />}
@@ -172,20 +172,20 @@ function StatBox({
   icon?: React.ReactNode;
 }) {
   return (
-    <div className="bg-[#242424] rounded-xl p-3 text-center">
+    <div className="bg-[#1a252f] rounded-xl p-3 text-center">
       <div className={cn(
         'flex items-center justify-center mb-1.5',
-        good ? 'text-green-400' : bad ? 'text-[#ca4754]' : 'text-[#646669]'
+        good ? 'text-green-400' : bad ? 'text-[#9a6a7a]' : 'text-[#D4B5A0]'
       )}>
         {icon}
       </div>
       <div className={cn(
         'text-xl font-mono font-bold',
-        good ? 'text-green-400' : bad ? 'text-[#ca4754]' : 'text-[#d1d0c5]'
+        good ? 'text-green-400' : bad ? 'text-[#9a6a7a]' : 'text-[#FFF1D3]'
       )}>
         {value}
       </div>
-      <div className="text-xs text-[#646669] mt-0.5">{label}</div>
+      <div className="text-xs text-[#D4B5A0] mt-0.5">{label}</div>
     </div>
   );
 }
@@ -193,15 +193,15 @@ function StatBox({
 function Detail({ label, value }: { label: string; value: string }) {
   return (
     <div>
-      <div className="text-lg font-mono font-semibold text-[#d1d0c5]">{value}</div>
-      <div className="text-xs text-[#646669]">{label}</div>
+      <div className="text-lg font-mono font-semibold text-[#FFF1D3]">{value}</div>
+      <div className="text-xs text-[#D4B5A0]">{label}</div>
     </div>
   );
 }
 
 function getGrade(wpm: number, accuracy: number) {
   const score = wpm * (accuracy / 100);
-  if (score >= 100) return { letter: 'S', bgColor: 'bg-[#e2b714]/20', textColor: 'text-[#e2b714]' };
+  if (score >= 100) return { letter: 'S', bgColor: 'bg-[#CA5995]/20', textColor: 'text-[#CA5995]' };
   if (score >= 80)  return { letter: 'A', bgColor: 'bg-green-500/20',  textColor: 'text-green-400'  };
   if (score >= 60)  return { letter: 'B', bgColor: 'bg-blue-500/20',   textColor: 'text-blue-400'   };
   if (score >= 40)  return { letter: 'C', bgColor: 'bg-yellow-500/20', textColor: 'text-yellow-400' };

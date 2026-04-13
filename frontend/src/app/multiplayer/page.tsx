@@ -65,29 +65,29 @@ export default function MultiplayerPage() {
   const isHost = room?.hostId === socketId;
 
   return (
-    <main className="min-h-screen bg-[#0f0f0f]">
+    <main className="min-h-screen bg-[#2A2A2A]">
       <Navbar />
 
       <div className="max-w-5xl mx-auto px-4 pt-20 pb-12">
 
         {/* Page header */}
         <div className="text-center mb-8">
-          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#e2b714]/10 border border-[#e2b714]/20 text-[#e2b714] text-xs font-mono mb-4">
-            <span className="w-1.5 h-1.5 rounded-full bg-[#e2b714] animate-pulse" />
+          <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-[#CA5995]/10 border border-[#CA5995]/20 text-[#CA5995] text-xs font-mono mb-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-[#CA5995] animate-pulse" />
             Real-time multiplayer
           </div>
-          <h1 className="text-2xl sm:text-3xl font-bold text-[#d1d0c5] mb-2">Race Room</h1>
-          <p className="text-[#646669] text-sm">Create a room, share the code, race your friends live</p>
+          <h1 className="text-2xl sm:text-3xl font-bold text-[#FFF1D3] mb-2">Race Room</h1>
+          <p className="text-[#D4B5A0] text-sm">Create a room, share the code, race your friends live</p>
         </div>
 
         {/* ── Countdown overlay ── */}
         {phase === 'countdown' && countdown !== null && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#0f0f0f]/90 backdrop-blur-md">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-[#2A2A2A]/90 backdrop-blur-md">
             <div className="text-center">
-              <p className="text-sm font-mono text-[#646669] uppercase tracking-widest mb-6">Race starts in</p>
+              <p className="text-sm font-mono text-[#D4B5A0] uppercase tracking-widest mb-6">Race starts in</p>
               <div
                 key={countdown}
-                className="font-mono font-black text-[#e2b714] leading-none animate-countdown"
+                className="font-mono font-black text-[#CA5995] leading-none animate-countdown"
                 style={{ fontSize: 'clamp(80px, 20vw, 160px)' }}
               >
                 {countdown === 0 ? 'GO!' : countdown}
@@ -96,8 +96,8 @@ export default function MultiplayerPage() {
                 <div className="mt-8 flex items-center justify-center gap-3">
                   {room.players.map(p => (
                     <div key={p.id} className="flex items-center gap-1.5 bg-[#1a1a1a] border border-white/8 rounded-lg px-3 py-1.5">
-                      <div className="w-2 h-2 rounded-full bg-[#e2b714] animate-pulse" />
-                      <span className="text-sm font-mono text-[#d1d0c5]">{p.username}</span>
+                      <div className="w-2 h-2 rounded-full bg-[#CA5995] animate-pulse" />
+                      <span className="text-sm font-mono text-[#FFF1D3]">{p.username}</span>
                     </div>
                   ))}
                 </div>
@@ -155,14 +155,14 @@ export default function MultiplayerPage() {
                 <div className={cn(
                   'rounded-2xl p-6 text-center border',
                   isMe
-                    ? 'bg-[#e2b714]/10 border-[#e2b714]/30'
+                    ? 'bg-[#CA5995]/10 border-[#CA5995]/30'
                     : 'bg-[#1a1a1a] border-white/8'
                 )}>
                   <div className="text-3xl mb-2">🏆</div>
-                  <div className="text-lg font-bold text-[#d1d0c5]">
+                  <div className="text-lg font-bold text-[#FFF1D3]">
                     {isMe ? 'You won!' : `${winner.username} wins!`}
                   </div>
-                  <div className="text-sm text-[#646669] mt-1 font-mono">
+                  <div className="text-sm text-[#D4B5A0] mt-1 font-mono">
                     {winner.wpm} wpm · {winner.accuracy}% accuracy
                   </div>
                 </div>
@@ -174,7 +174,7 @@ export default function MultiplayerPage() {
             <div className="flex items-center justify-center gap-3">
               <button
                 onClick={handleLeaveRoom}
-                className="px-8 py-3 bg-[#e2b714] text-[#0f0f0f] font-bold rounded-xl hover:bg-[#f0ca2d] transition-colors shadow-lg shadow-[#e2b714]/20"
+                className="px-8 py-3 bg-[#CA5995] text-[#2A2A2A] font-bold rounded-xl hover:bg-[#D4709A] transition-colors shadow-lg shadow-[#CA5995]/20"
               >
                 Play Again
               </button>
