@@ -1,6 +1,7 @@
 import type { Metadata } from 'next';
 import './globals.css';
 import { Footer } from '@/components/ui/Footer';
+import { PixelStardust } from '@/components/ui/PixelStardust';
 
 export const metadata: Metadata = {
   title: 'TypeCraft',
@@ -28,8 +29,15 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className="bg-bg text-text-primary antialiased font-sans min-h-screen flex flex-col">
-        <div className="flex-1">
+      <body className="bg-bg text-text-primary antialiased font-sans min-h-screen flex flex-col relative">
+        {/* CRT Vignette overlay */}
+        <div className="vignette" />
+        {/* Scanline overlay */}
+        <div className="scanlines" />
+        {/* Pixel stardust mouse trail */}
+        <PixelStardust />
+
+        <div className="flex-1 relative z-10">
           {children}
         </div>
         <Footer />

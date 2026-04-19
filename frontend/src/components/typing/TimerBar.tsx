@@ -11,10 +11,10 @@ export function TimerBar({ timeLeft, totalTime, isRunning }: TimerBarProps) {
   const isLow = progress < 20;
 
   return (
-    <div className="w-full h-0.5 bg-surface-active rounded-full overflow-hidden">
+    <div className="w-full h-2 bg-surface border-2 border-black overflow-hidden">
       <div
-        className={`h-full rounded-full transition-all duration-500 ease-linear ${
-          isLow ? 'bg-text-error' : 'bg-accent'
+        className={`h-full transition-all duration-500 ease-linear ${
+          isLow ? 'bg-text-error' : 'bg-accent2'
         } ${!isRunning ? 'opacity-30' : ''}`}
         style={{ width: `${progress}%` }}
       />
