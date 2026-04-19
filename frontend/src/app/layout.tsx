@@ -1,5 +1,6 @@
 import type { Metadata } from 'next';
 import './globals.css';
+import { Footer } from '@/components/ui/Footer';
 
 export const metadata: Metadata = {
   title: 'TypeCraft',
@@ -27,8 +28,11 @@ export default function RootLayout({
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
       </head>
-      <body className="bg-bg text-text-primary antialiased font-sans min-h-screen">
-        {children}
+      <body className="bg-bg text-text-primary antialiased font-sans min-h-screen flex flex-col">
+        <div className="flex-1">
+          {children}
+        </div>
+        <Footer />
       </body>
     </html>
   );

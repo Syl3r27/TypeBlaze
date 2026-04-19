@@ -11,26 +11,30 @@ const config: Config = {
     extend: {
       colors: {
         bg: {
-          DEFAULT: '#0f0f0f',
-          secondary: '#171717',
-          tertiary: '#1f1f1f',
+          DEFAULT: '#2A2A2A',
+          secondary: '#333333',
+          tertiary: '#3A3A3A',
         },
         surface: {
-          DEFAULT: '#242424',
-          hover: '#2e2e2e',
-          active: '#383838',
+          DEFAULT: '#333333',
+          hover: '#3F3F3F',
+          active: '#4A4A4A',
         },
         accent: {
-          DEFAULT: '#e2b714',
-          hover: '#f0ca2d',
-          dim: '#e2b71433',
+          DEFAULT: '#FFB090',
+          hover: '#FFC0A5',
+          dim: '#FFB09044',
+        },
+        accent2: {
+          DEFAULT: '#CA5995',
+          hover: '#D4709A',
         },
         text: {
-          primary: '#d1d0c5',
-          secondary: '#646669',
-          tertiary: '#3a3a3c',
-          error: '#ca4754',
-          success: '#4caf79',
+          primary: '#FFF1D3',
+          secondary: '#D4B5A0',
+          tertiary: '#A89080',
+          error: '#CA5995',
+          success: '#FFB090',
         },
       },
       fontFamily: {
@@ -54,9 +58,9 @@ const config: Config = {
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
         pulseRing: {
-          '0%': { transform: 'scale(0.95)', boxShadow: '0 0 0 0 rgba(226,183,20,0.4)' },
-          '70%': { transform: 'scale(1)', boxShadow: '0 0 0 10px rgba(226,183,20,0)' },
-          '100%': { transform: 'scale(0.95)', boxShadow: '0 0 0 0 rgba(226,183,20,0)' },
+          '0%': { transform: 'scale(0.95)', boxShadow: '0 0 0 0 rgba(90,143,181,0.4)' },
+          '70%': { transform: 'scale(1)', boxShadow: '0 0 0 10px rgba(90,143,181,0)' },
+          '100%': { transform: 'scale(0.95)', boxShadow: '0 0 0 0 rgba(90,143,181,0)' },
         },
         caretBlink: {
           '0%, 100%': { opacity: '1' },

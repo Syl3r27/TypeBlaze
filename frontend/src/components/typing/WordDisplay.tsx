@@ -52,7 +52,7 @@ export function WordDisplay({ wordStates, currentWordIndex, currentInput }: Word
       {/* Soft fade at the bottom to hide the third-row peek */}
       <div
         className="absolute bottom-0 left-0 right-0 h-10 pointer-events-none"
-        style={{ background: 'linear-gradient(transparent, #0f0f0f)' }}
+        style={{ background: 'linear-gradient(transparent, #2A2A2A)' }}
       />
     </div>
   );
@@ -79,7 +79,7 @@ const Word = forwardRef<HTMLSpanElement, WordProps>(function Word(
       className={cn(
         'relative font-mono text-2xl',
         isActive
-          ? 'after:absolute after:inset-x-0 after:-bottom-[2px] after:h-[2px] after:rounded-full after:bg-[#e2b714]/30'
+          ? 'after:absolute after:inset-x-0 after:-bottom-[2px] after:h-[2px] after:rounded-full after:bg-[#CA5995]/30'
           : ''
       )}
       style={{ lineHeight: '1.75', letterSpacing: '0.01em' }}
@@ -89,14 +89,14 @@ const Word = forwardRef<HTMLSpanElement, WordProps>(function Word(
           key={i}
           style={{
             color:
-              letter.state === 'correct'   ? '#d1d0c5' :
-              letter.state === 'incorrect' ? '#ca4754' :
-              letter.state === 'extra'     ? '#ca4754' :
+              letter.state === 'correct'   ? '#FFF1D3' :
+              letter.state === 'incorrect' ? '#9a6a7a' :
+              letter.state === 'extra'     ? '#9a6a7a' :
               // pending
-              isPast ? '#ca4754' : isActive ? '#646669' : '#3a3a3c',
+              isPast ? '#9a6a7a' : isActive ? '#D4B5A0' : '#6a7680',
             opacity: letter.state === 'extra' ? 0.6 : 1,
             textDecoration: letter.state === 'incorrect' ? 'underline' : 'none',
-            textDecorationColor: '#ca4754',
+            textDecorationColor: '#9a6a7a',
             textUnderlineOffset: '3px',
           }}
         >
@@ -107,7 +107,7 @@ const Word = forwardRef<HTMLSpanElement, WordProps>(function Word(
       {/* Caret — only on active word, positioned via ch units (works perfectly for monospace) */}
       {isActive && (
         <span
-          className="absolute bg-[#e2b714] animate-caret-blink"
+          className="absolute bg-[#CA5995] animate-caret-blink"
           style={{
             width: '2px',
             top: '10%',
