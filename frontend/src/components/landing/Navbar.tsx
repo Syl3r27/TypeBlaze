@@ -23,7 +23,7 @@ export function Navbar() {
             <div className="w-8 h-8 bg-accent border-[3px] border-black shadow-brutal-sm flex items-center justify-center group-hover:translate-x-[2px] group-hover:translate-y-[2px] group-hover:shadow-none transition-all">
               <Keyboard className="w-4 h-4 text-white" />
             </div>
-            <span className="font-pixel text-xs text-white tracking-tight">
+            <span className="font-pixel text-xs text-white tracking-tight logo-glow">
               Type<span className="text-accent">Craft</span>
             </span>
           </Link>

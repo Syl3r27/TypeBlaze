@@ -41,7 +41,7 @@ export function Hero() {
   return (
     <section
       ref={heroRef}
-       className="relative min-h-screen flex flex-col items-center justify-center px-4 pt-24 sm:pt-28 pb-20 overflow-hidden"
+      className="relative min-h-screen flex flex-col items-center justify-center px-4 pt-24 sm:pt-28 pb-20 overflow-hidden"
     >
       {/* Background effects */}
       <div className="absolute inset-0 bg-grid opacity-40" />
@@ -51,17 +51,41 @@ export function Hero() {
 
       <div className="relative z-10 w-full max-w-[1200px] mx-auto px-4 lg:px-6 text-center">
         {/* Badge */}
-         <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 border-[3px] border-accent text-accent text-xs font-pixel mt-4 mb-10 shadow-brutal-sm">
+        <div className="inline-flex items-center gap-2 px-4 py-2 bg-accent/10 border-[3px] border-accent text-accent text-xs font-pixel mt-4 mb-10 shadow-brutal-sm">
           <span className="w-2 h-2 bg-accent animate-pulse" />
-          MULTIPLAYER TYPING
+          REAL-TME MULTIPLAYER TYPING
         </div>
 
         {/* Title */}
         <h1 ref={titleRef} className="font-pixel text-2xl sm:text-4xl lg:text-5xl text-white mb-8 leading-[1.6] tracking-tight">
-          TYPE FASTER.
+          <span className="inline-flex items-center gap-4 flex-wrap justify-center">
+            TYPE FASTER.
+
+          </span>
           <br />
-          <span className="gradient-text">RACE SMARTER.</span>
+          <span className="gradient-text">RACE SMARTER
+            <img
+              src="/pikachu.gif"
+              alt="pixel dino on skateboard"
+              className="inline-block"
+              style={{
+
+                height: '0.8em',
+                width: 'auto',
+                imageRendering: 'pixelated',
+                animation: 'dinoRun 0.6s ease-in-out infinite alternate',
+                verticalAlign: 'bottom',
+              }}
+            />
+          </span>
         </h1>
+
+        <style>{`
+          @keyframes dinoRun {
+            from { transform: translateY(0px) rotate(-2deg); }
+            to   { transform: translateY(-8px) rotate(2deg); }
+          }
+        `}</style>
 
         {/* Subtitle */}
         <p
@@ -107,7 +131,7 @@ export function Hero() {
         {/* Demo typing preview */}
         <div
           ref={demoRef}
-           className="brutal-card p-6 sm:p-8 max-w-3xl mx-auto"
+          className="brutal-card p-6 sm:p-8 max-w-3xl mx-auto"
         >
           <div className="flex items-center justify-between mb-5">
             <div className="flex items-center gap-4">
@@ -122,7 +146,7 @@ export function Hero() {
       </div>
 
       {/* Features row */}
-       <div className="relative z-10 max-w-[1200px] mx-auto w-full px-4 lg:px-6 mt-20">
+      <div className="relative z-10 max-w-[1200px] mx-auto w-full px-4 lg:px-6 mt-20">
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {[
             {
@@ -194,8 +218,8 @@ function DemoWords() {
             w.state === 'done'
               ? 'text-white'
               : w.state === 'active'
-              ? 'text-accent2 relative'
-              : 'text-text-tertiary'
+                ? 'text-accent2 relative'
+                : 'text-text-tertiary'
           }
         >
           {w.text}
